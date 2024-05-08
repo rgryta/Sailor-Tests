@@ -89,7 +89,7 @@ class ExamModel(application: Application) : AndroidViewModel(application) {
         return questions
     }
 
-    fun generateExam(): String {
+    fun generateExam() {
         val categories: MutableList<ExamCategory> = mutableListOf()
         categories.add(
             ExamCategory(
@@ -103,10 +103,12 @@ class ExamModel(application: Application) : AndroidViewModel(application) {
                 questions = loadCategory(id = R.raw.prawo),
             )
         )
-        val exam = Exam(
-            categories = categories,
+        val newState = _examState.value.copy(
+            state = 1,
+            exam = Exam(
+                categories = categories,
+            )
         )
-
-        return exam.categories[0].questions[0].question
+        _examState.value = newState
     }
 }
