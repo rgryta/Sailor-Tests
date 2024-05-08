@@ -1,4 +1,4 @@
-package eu.gryta.sailortests.activities
+package eu.gryta.sailortests.activities.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,6 +16,5 @@ class MainActivity : ComponentActivity() {
                 MainCompose()
             }
         }
-
     }
 }

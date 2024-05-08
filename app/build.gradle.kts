@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.material3.window)
 
     implementation(libs.realm)
+    implementation(libs.opencsv)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     testImplementation(libs.junit)
 

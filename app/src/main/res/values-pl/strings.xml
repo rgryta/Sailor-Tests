@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Żeglarskie Testy</string>
+
+    <string name="start">Start</string>
+    <string name="history">Historia</string>
+    <string name="settings">Ustawienia</string>
+
+    <string name="navigation_rules">Locja</string>
+    <string name="sailing_law">Prawo Żeglugi</string>
 </resources>

@@ -1,5 +1,6 @@
-package eu.gryta.sailortests.activities
+package eu.gryta.sailortests.activities.main
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -13,12 +14,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import eu.gryta.sailortests.R
+import eu.gryta.sailortests.activities.exam.ExamActivity
 
 @Composable
 fun MainCompose() {
+    val context = LocalContext.current
+    val resources = context.resources
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround,
@@ -42,28 +47,32 @@ fun MainCompose() {
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    Log.d("BUT", "Clicked on 1st button")
+                    val intent = Intent(
+                        context,
+                        ExamActivity::class.java
+                    )
+                    context.startActivity(intent)
                 }
             ) {
-                Text(text = "Start")
+                Text(text = resources.getString(R.string.start))
             }
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    Log.d("BUT", "Clicked on 1st button")
+                    Log.d("BUT", "Clicked on 2nd button")
                 }
             ) {
-                Text(text = "History")
+                Text(text = resources.getString(R.string.history))
             }
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    Log.d("BUT", "Clicked on 1st button")
+                    Log.d("BUT", "Clicked on 3rd button")
                 }
             ) {
-                Text(text = "Settings")
+                Text(text = resources.getString(R.string.settings))
             }
 
         }
