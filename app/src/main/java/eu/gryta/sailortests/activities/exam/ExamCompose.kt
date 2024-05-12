@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,6 +26,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,6 +70,7 @@ sealed class BackPress {
 fun QuestionCard(
     qId: Int,
     cId: Int,
+    examModel: ExamModel,
     examState: ExamState,
     navController: NavHostController
 ) {
@@ -123,8 +124,67 @@ fun QuestionCard(
             }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            Text(question.question)
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .clip(shape = RoundedCornerShape(8.dp))
+                    .background(color = MaterialTheme.colorScheme.primaryContainer)
+                    .padding(20.dp)
+            ) {
+                Text(
+                    question.question,
+                    style = LocalTextStyle.current.copy(
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .clip(shape = RoundedCornerShape(8.dp))
+                    .background(color = MaterialTheme.colorScheme.secondaryContainer),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp)
+                ) {
+                    RadioButton(
+                        selected = question.selected1,
+                        onClick = { examModel.selectOption(cId = cId, qId = qId, optionId = 1) }
+                    )
+                    Text(
+                        text = question.answer1!!,
+                        style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSecondaryContainer),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp)
+                ) {
+                    RadioButton(
+                        selected = question.selected2,
+                        onClick = { examModel.selectOption(cId = cId, qId = qId, optionId = 2) }
+                    )
+                    Text(
+                        text = question.answer2!!,
+                        style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSecondaryContainer),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
         }
     }
 }
@@ -399,6 +459,7 @@ fun ExamCompose(examModel: ExamModel = viewModel()) {
                 QuestionCard(
                     cId = cId,
                     qId = qId,
+                    examModel = examModel,
                     examState = examState,
                     navController = navController
                 )

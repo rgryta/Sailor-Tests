@@ -8,19 +8,19 @@ data class ExamQuestion(
 
     val answer1: String? = null,
     val points1: Float? = null,
-    val selected1: Boolean? = null,
+    val selected1: Boolean = false,
 
     val answer2: String? = null,
     val points2: Float? = null,
-    val selected2: Boolean? = null,
+    val selected2: Boolean = false,
 
     val answer3: String? = null,
     val points3: Float? = null,
-    val selected3: Boolean? = null,
+    val selected3: Boolean = false,
 
     val answer4: String? = null,
     val points4: Float? = null,
-    val selected4: Boolean? = null,
+    val selected4: Boolean = false,
 ) {
     fun maxPoints(): Float {
         var p = 0f

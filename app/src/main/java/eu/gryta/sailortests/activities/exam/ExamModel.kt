@@ -111,4 +111,83 @@ class ExamModel(application: Application) : AndroidViewModel(application) {
         )
         _examState.value = newState
     }
+
+    fun selectOption(cId: Int, qId: Int, optionId: Int) {
+        val question = _examState.value.exam!!.categories[cId].questions[cId]
+
+        val newQuestionState = when (optionId) {
+            1 -> {
+                var nqs = question.copy(
+                    selected1 = true
+                )
+                if (!question.multiChoice()) {
+                    nqs = nqs.copy(
+                        selected2 = false,
+                        selected3 = false,
+                        selected4 = false
+                    )
+                }
+                nqs
+            }
+
+            2 -> {
+                var nqs = question.copy(
+                    selected2 = true
+                )
+                if (!question.multiChoice()) {
+                    nqs = nqs.copy(
+                        selected1 = false,
+                        selected3 = false,
+                        selected4 = false
+                    )
+                }
+                nqs
+            }
+
+            3 -> {
+                var nqs = question.copy(
+                    selected3 = true
+                )
+                if (!question.multiChoice()) {
+                    nqs = nqs.copy(
+                        selected1 = false,
+                        selected2 = false,
+                        selected4 = false
+                    )
+                }
+                nqs
+            }
+
+            4 -> {
+                var nqs = question.copy(
+                    selected4 = true
+                )
+                if (!question.multiChoice()) {
+                    nqs = nqs.copy(
+                        selected1 = false,
+                        selected2 = false,
+                        selected3 = false
+                    )
+                }
+                nqs
+            }
+
+            else -> question.copy()
+        }
+
+        val newCategories = _examState.value.exam!!.categories.toMutableList()
+        val newQuestions = newCategories[cId].questions.toMutableList()
+
+        newQuestions[qId] = newQuestionState
+
+        newCategories[cId] = newCategories[cId].copy(
+            questions = newQuestions
+        )
+
+        _examState.value = _examState.value.copy(
+            exam = _examState.value.exam!!.copy(
+                categories = newCategories
+            )
+        )
+    }
 }
