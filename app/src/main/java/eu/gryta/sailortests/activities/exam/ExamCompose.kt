@@ -7,18 +7,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material.ripple.RippleTheme
-import androidx.compose.material3.Button
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -42,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -62,14 +67,65 @@ sealed class BackPress {
 
 
 @Composable
-fun QuestionCard(question: ExamQuestion){
+fun QuestionCard(
+    qId: Int,
+    cId: Int,
+    examState: ExamState,
+    navController: NavHostController
+) {
+    val context = LocalContext.current
 
-    Box(
-        modifier= Modifier
-            .background(color = MaterialTheme.colorScheme.primaryContainer)
-            .padding(10.dp)
-    ) {
-        Text(question.question)
+    val maxCId = examState.exam!!.categories.size
+
+    val maxQId = examState.exam.categories[cId].questions.size
+    val question = examState.exam.categories[cId].questions[qId]
+
+    Scaffold(
+        modifier = Modifier
+            .padding(10.dp),
+        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButton = {
+            Row(
+                modifier = Modifier.fillMaxWidth(0.8f),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                FloatingActionButton(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    onClick = {
+                        navController.popBackStack()
+                    }) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                        contentDescription = context.resources.getString(R.string.previous),
+                        tint = LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
+                    )
+                }
+                FloatingActionButton(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    onClick = {
+                        if (qId + 1 == maxQId) {
+                            if (cId + 1 == maxCId) {
+                                navController.navigate("finish")
+                            } else {
+                                navController.navigate("c/${cId + 1}/init")
+                            }
+                        } else {
+                            navController.navigate("c/$cId/q/${qId + 1}")
+                        }
+                    }) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = context.resources.getString(R.string.next),
+                        tint = LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
+                    )
+                }
+
+            }
+        }
+    ) { innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)) {
+            Text(question.question)
+        }
     }
 }
 
@@ -85,10 +141,9 @@ fun ExamSetting(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.primaryContainer)
-            .padding(5.dp)
             .clip(shape)
-            .clip(shape = RoundedCornerShape(20.dp)),
+            .background(color = MaterialTheme.colorScheme.primaryContainer)
+            .padding(5.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -202,11 +257,76 @@ fun GenerateExam(
 
 @Composable
 fun ExamCategory(cId: Int, examState: ExamState, navController: NavHostController) {
-    Text(examState.exam!!.categories[cId].name)
-    Button(onClick = {
-        navController.navigate("c/$cId/q/0")
-    }) {
-        Text(text = "Next")
+
+    val context = LocalContext.current
+
+    Scaffold(
+        modifier = Modifier
+            .padding(10.dp),
+        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButton = {
+            Row(
+                modifier = Modifier.fillMaxWidth(0.8f),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                val containerColor: Color
+                val tint: Color
+                if (cId != 0) {
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                    tint = LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
+                } else {
+                    containerColor = Color.DarkGray
+                    tint = Color.LightGray
+                }
+                CompositionLocalProvider(
+                    LocalRippleTheme provides
+                            if (cId != 0) LocalRippleTheme.current else NoRippleTheme
+                ) {
+                    FloatingActionButton(
+                        containerColor = containerColor,
+                        onClick = {
+                            navController.popBackStack()
+                        }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = context.resources.getString(R.string.previous),
+                            tint = tint
+                        )
+                    }
+                }
+                FloatingActionButton(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    onClick = { navController.navigate("c/$cId/q/0") }) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = context.resources.getString(R.string.next),
+                        tint = LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
+                    )
+                }
+
+            }
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .clip(shape = RoundedCornerShape(8.dp))
+                    .background(color = MaterialTheme.colorScheme.primaryContainer)
+                    .padding(20.dp)
+            ) {
+                Text(
+                    examState.exam!!.categories[cId].name,
+                    style = LocalTextStyle.current.copy(fontSize = 20.sp)
+                )
+            }
+        }
     }
 }
 
@@ -252,11 +372,10 @@ fun ExamCompose(examModel: ExamModel = viewModel()) {
         modifier = Modifier.fillMaxSize()
     )
     {
-        Text("Backstack size: ${navController.currentBackStack.value.size}")
         NavHost(
             navController = navController,
             startDestination = "start",
-            ) {
+        ) {
             composable("start") {
                 GenerateExam(navController = navController, examModel = examModel)
             }
@@ -265,39 +384,29 @@ fun ExamCompose(examModel: ExamModel = viewModel()) {
                 arguments = listOf(navArgument("categoryId") { type = NavType.IntType })
             ) {
                 val cId: Int = it.arguments?.getInt("categoryId")!!
+
                 ExamCategory(cId = cId, examState = examState, navController = navController)
             }
-                composable(
-                    "c/{categoryId}/q/{questionId}",
-                    arguments = listOf(
-                        navArgument("categoryId") { type = NavType.IntType },
-                        navArgument("questionId") { type = NavType.IntType })
-                ) {
-                    val cId: Int = it.arguments?.getInt("categoryId")!!
-                    val qId: Int = it.arguments?.getInt("questionId")!!
+            composable(
+                "c/{categoryId}/q/{questionId}",
+                arguments = listOf(
+                    navArgument("categoryId") { type = NavType.IntType },
+                    navArgument("questionId") { type = NavType.IntType })
+            ) {
+                val cId: Int = it.arguments?.getInt("categoryId")!!
+                val qId: Int = it.arguments?.getInt("questionId")!!
 
-                    val maxCId: Int = examState.exam!!.categories.size
-                    val maxQId: Int = examState.exam!!.categories[cId].questions.size
-
-                    QuestionCard(question = examState.exam!!.categories[cId].questions[qId])
-                    Button(onClick = {
-                        if (qId + 1 == maxQId) {
-                            if (cId + 1 == maxCId) {
-                                navController.navigate("finish")
-                            } else {
-                                navController.navigate("c/${cId + 1}/init")
-                            }
-                        } else {
-                            navController.navigate("c/$cId/q/${qId + 1}")
-                        }
-                    }){
-                        Text(text = "Next")
-                    }
-                }
+                QuestionCard(
+                    cId = cId,
+                    qId = qId,
+                    examState = examState,
+                    navController = navController
+                )
+            }
             composable("finish") {
                 Text("Finish")
             }
-            }
+        }
 
     }
 }

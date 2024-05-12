@@ -7,6 +7,8 @@
 
     <string name="start_exam">Rozpocznij test</string>
     <string name="double_exit">Naciśnij ponownie, aby wyjść</string>
+    <string name="next">Dalej</string>
+    <string name="previous">Wstecz</string>
 
     <string name="navigation_rules">Locja</string>
     <string name="sailing_law">Prawo Żeglugi</string>

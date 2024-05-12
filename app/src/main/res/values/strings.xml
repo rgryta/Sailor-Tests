@@ -7,6 +7,8 @@
 
     <string name="start_exam">Start Exam</string>
     <string name="double_exit">Press again to exit</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
 
     <string name="navigation_rules">Navigation Rules</string>
     <string name="sailing_law">Sailing Law</string>
