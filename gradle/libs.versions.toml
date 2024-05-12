@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.0-alpha08"
+agp = "8.5.0-beta01"
 kotlin = "1.9.23"
 coreKtx = "1.13.1"
 appcompat = "1.6.1"
@@ -13,7 +13,7 @@ material = "1.12.0"
 material-icons = "1.6.7"
 material3 = "1.2.1"
 
-realm = "1.14.1"
+realm = "1.16.0"
 opencsv = "5.9"
 
 numberPicker = "1.0.3"
@@ -22,8 +22,7 @@ junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 
-
-ben-manes-versions = "0.51.0"
+benManesVersions = "0.51.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,5 +51,5 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 realm = { id = "io.realm.kotlin", version.ref = "realm" }
-ben-manes = { id = "com.github.ben-manes.versions", version.ref = "ben-manes-versions" }
+ben-manes = { id = "com.github.ben-manes.versions", version.ref = "benManesVersions" }
 

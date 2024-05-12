@@ -117,10 +117,9 @@ fun Modifier.bottomBorder(strokeWidth: Dp, color: Color, cornerRadiusDp: Dp): Mo
 }
 
 @Composable
-fun Modifier.sideBorder(strokeWidth: Dp, color: Color, cornerRadiusDp: Dp): Modifier {
+fun Modifier.sideBorder(strokeWidth: Dp, color: Color): Modifier {
     val density = LocalDensity.current
     val strokeWidthPx = density.run { strokeWidth.toPx() }
-    val cornerRadiusPx = density.run { cornerRadiusDp.toPx() }
 
     return this then Modifier.drawBehind {
         val width = size.width
