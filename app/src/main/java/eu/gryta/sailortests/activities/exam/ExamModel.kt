@@ -113,7 +113,7 @@ class ExamModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun selectOption(cId: Int, qId: Int, optionId: Int) {
-        val question = _examState.value.exam!!.categories[cId].questions[cId]
+        val question = _examState.value.exam!!.categories[cId].questions[qId]
 
         val newQuestionState = when (optionId) {
             1 -> {
